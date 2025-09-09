@@ -1,0 +1,4 @@
+import mensajeros.*
+
+object mensajeria {
+}
