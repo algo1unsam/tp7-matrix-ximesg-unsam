@@ -2,7 +2,91 @@ import mensajeria.*
 import mensajeros.*
 
 
-describe "2 " {}
+describe "2 " {
+    test "contratar a un mensajero" {
+        mensajeria.contratar(morfeo)
+
+        assert.that(mensajeria.estaContratado(morfeo))
+    }
+
+    test "despedir a un mensajero" {
+        mensajeria.contratar(morfeo)
+        mensajeria.contratar(neo)
+
+        mensajeria.despedir(neo)
+
+        assert.that(mensajeria.estaContratado(morfeo))
+        assert.notThat(mensajeria.estaContratado(neo))
+    }
+
+    test "despedir a todos los mensajeros" {
+        mensajeria.contratar(morfeo)
+        mensajeria.contratar(neo)
+        mensajeria.contratar(trinity)
+
+        mensajeria.despedirATodos()
+
+        assert.equals(0, mensajeria.contratados().size())
+    }
+
+    test "la mensajeria es grande" {
+        mensajeria.contratar(morfeo)
+        mensajeria.contratar(neo)
+        mensajeria.contratar(trinity)
+
+        assert.that(mensajeria.esGrande(mensajeria.contratados()))
+    }
+
+    test "la mensajeria no es grande" {
+        mensajeria.contratar(morfeo)
+
+        assert.notThat(mensajeria.esGrande(mensajeria.contratados()))
+    }
+
+    test "puede entregar un paquete" {
+        mensajeria.contratar(morfeo)
+        mensajeria.contratar(neo)
+        mensajeria.contratar(trinity)
+
+        paquete.pagar()
+
+        assert.that(mensajeria.puedeEntregarPaquete(mensajeria.contratados().last(), paquete))
+    }
+
+    test "peso ultimo mensajero contratado" {
+        mensajeria.contratar(morfeo)
+        mensajeria.contratar(neo)
+        mensajeria.contratar(trinity)
+
+        assert.equals(900, mensajeria.pesoMensajero(mensajeria.contratados().last()))
+    }
+}
 
 
-describe "3 " {}
+describe "3 " {
+    test "paquetito siempre esta pago" {
+        assert.that(paquetito.estaPago())
+    }
+
+    test "paquetito cualquiera lo puede entregar" {
+      assert.that(paquetito.puedeSerEntregadoPor(morfeo))
+      assert.that(paquetito.puedeSerEntregadoPor(neo))
+      assert.that(paquetito.puedeSerEntregadoPor(trinity))
+    }
+
+    test "paqueton varios destinos" {
+        paqueton.agregarDestino(puente)
+        paqueton.agregarDestino(laMatrix)
+
+        assert.that(paqueton.destinos().contains(puente))
+    }
+
+    test "paqueton pago parcial" {
+        paqueton.agregarDestino(puente)
+        paqueton.agregarDestino(laMatrix)
+
+        paqueton.pagar()
+
+        assert.notThat(paqueton.estaPago())
+    }
+}
